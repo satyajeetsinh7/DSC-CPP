@@ -1,0 +1,102 @@
+/* a node of the singly linked list
+struct Node {
+    int data;
+    struct Node *next;
+
+    Node(int x){
+        data = x;
+        next = NULL;
+    }
+};
+*/
+
+class Solution {
+  public:
+    // Utility to get the tail of the list
+    Node* getTail(Node* cur) {
+        while (cur != NULL && cur->next != NULL)
+            cur = cur->next;
+        return cur;
+    }
+
+    // Partition the list around the end (pivot)
+    Node* partition(Node* head, Node* end, Node** newHead, Node** newEnd) {
+        Node* pivot = end;
+        Node* prev = NULL;
+        Node* cur = head;
+        Node* tail = pivot;
+
+        *newHead = NULL;
+        *newEnd = pivot;
+
+        // Process all nodes except pivot
+        while (cur != pivot) {
+            if (cur->data < pivot->data) {
+                // First node less than pivot becomes newHead
+                if (*newHead == NULL)
+                    *newHead = cur;
+
+                prev = cur;
+                cur = cur->next;
+            } else {
+                // Move cur node to the end, after pivot
+                if (prev != NULL)
+                    prev->next = cur->next;
+
+                Node* temp = cur->next;
+                cur->next = NULL;
+                tail->next = cur;
+                tail = cur;
+                cur = temp;
+            }
+        }
+
+        // If all nodes are >= pivot
+        if (*newHead == NULL)
+            *newHead = pivot;
+
+        *newEnd = tail;
+        return pivot;
+    }
+
+    // Recursive quicksort
+    Node* quickSortRecur(Node* head, Node* end) {
+        if (!head || head == end)
+            return head;
+
+        Node* newHead = NULL;
+        Node* newEnd = NULL;
+
+        // Partition the list, pivot in correct place
+        Node* pivot = partition(head, end, &newHead, &newEnd);
+
+        // Sort the list before pivot
+        if (newHead != pivot) {
+            // Find node before pivot
+            Node* temp = newHead;
+            while (temp->next != pivot)
+                temp = temp->next;
+            temp->next = NULL;
+
+            // Recursively sort left part
+            newHead = quickSortRecur(newHead, temp);
+
+            // Connect last node of left part to pivot
+            temp = getTail(newHead);
+            temp->next = pivot;
+        }
+
+        // Sort the list after pivot
+        pivot->next = quickSortRecur(pivot->next, newEnd);
+
+        return newHead;
+    }
+
+    struct Node* quickSort(struct Node* head) {
+        if (!head || !head->next)
+            return head;
+
+        Node* end = getTail(head);
+        return quickSortRecur(head, end);
+    }
+};
