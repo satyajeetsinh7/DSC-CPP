@@ -1,0 +1,20 @@
+class Solution {
+  public:
+    bool isCircular(Node *head) {
+        if (head == NULL)
+            return false;
+
+        Node* temp = head->next;
+
+        // Traverse the list
+        while (temp != NULL && temp != head)
+            temp = temp->next;
+
+        // If we reached head again -> circular
+        if (temp == head)
+            return true;
+
+        // If we reached NULL -> not circular
+        return false;
+    }
+};
