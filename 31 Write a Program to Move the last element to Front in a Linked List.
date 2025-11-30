@@ -1,0 +1,23 @@
+class Solution {
+public:
+    Node *moveToFront(Node *head) {
+        // If list has 0 or 1 node
+        if (head == NULL || head->next == NULL)
+            return head;
+        
+        Node* secondLast = NULL;
+        Node* last = head;
+        
+        // Traverse to find last and second last nodes
+        while (last->next != NULL) {
+            secondLast = last;
+            last = last->next;
+        }
+        
+        // Detach last node and move it to front
+        secondLast->next = NULL;
+        last->next = head;
+
+        return last;  // new head
+    }
+};
