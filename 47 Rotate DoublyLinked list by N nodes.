@@ -1,0 +1,37 @@
+class Solution {
+  public:
+    Node *rotateDLL(Node *head, int p) {
+
+        if (!head || !head->next || p == 0)
+            return head;
+
+        // Step 1: find length and tail
+        int len = 1;
+        Node* tail = head;
+        while (tail->next != NULL) {
+            tail = tail->next;
+            len++;
+        }
+
+        // Step 2: handle p >= len
+        p = p % len;
+        if (p == 0) return head;  // no rotation needed
+
+        // Step 3: move to p-th node (this will be newTail)
+        Node* newTail = head;
+        for (int i = 1; i < p; i++) {
+            newTail = newTail->next;
+        }
+
+        Node* newHead = newTail->next;
+
+        // Step 4: break and reconnect
+        newTail->next = NULL;
+        newHead->prev = NULL;
+
+        tail->next = head;
+        head->prev = tail;
+
+        return newHead;
+    }
+};
