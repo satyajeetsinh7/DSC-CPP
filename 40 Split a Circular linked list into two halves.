@@ -1,0 +1,48 @@
+/* The structure of linked list is the following
+struct Node
+{
+  int data;
+  struct Node *next;
+
+  Node(int x){
+      data = x;
+      next = NULL;
+  }
+};
+*/
+
+class Solution {
+  public:
+    pair<Node *, Node *> splitList(struct Node *head) {
+        if (head == NULL || head->next == NULL) {
+            // Edge case (not really expected per constraints)
+            return {head, NULL};
+        }
+
+        Node* slow = head;
+        Node* fast = head;
+
+        // Use slow and fast to find the middle
+        while (fast->next != head && fast->next->next != head) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+
+        // For even number of nodes, move fast to the last node
+        if (fast->next->next == head) {
+            fast = fast->next;
+        }
+
+        // Now slow is at end of first half
+        Node* head1 = head;
+        Node* head2 = slow->next;
+
+        // Make the first half circular
+        slow->next = head1;
+
+        // Make the second half circular
+        fast->next = head2;
+
+        return {head1, head2};
+    }
+};
