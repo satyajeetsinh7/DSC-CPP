@@ -1,0 +1,76 @@
+/*
+class Node {
+  public:
+    int data;
+    Node* next;
+    Node(int x) {
+        data = x;
+        next = NULL;
+    }
+};
+*/
+
+class Solution {
+  public:
+    // Helper to reverse a linked list
+    Node* reverseList(Node* head) {
+        Node* prev = NULL;
+        Node* curr = head;
+        Node* next = NULL;
+
+        while (curr != NULL) {
+            next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+    
+    // Helper to remove leading zeros (but keep single 0)
+    Node* removeLeadingZeros(Node* head) {
+        while (head != NULL && head->data == 0 && head->next != NULL) {
+            head = head->next;
+        }
+        return head;
+    }
+
+    Node* addTwoLists(Node* head1, Node* head2) {
+        // Step 1: Remove leading zeros
+        head1 = removeLeadingZeros(head1);
+        head2 = removeLeadingZeros(head2);
+
+        // Step 2: Reverse both lists
+        head1 = reverseList(head1);
+        head2 = reverseList(head2);
+
+        // Step 3: Add digit by digit
+        int carry = 0;
+        Node* dummy = new Node(-1);
+        Node* tail = dummy;
+
+        while (head1 != NULL || head2 != NULL || carry) {
+            int sum = carry;
+            if (head1 != NULL) {
+                sum += head1->data;
+                head1 = head1->next;
+            }
+            if (head2 != NULL) {
+                sum += head2->data;
+                head2 = head2->next;
+            }
+
+            carry = sum / 10;
+            tail->next = new Node(sum % 10);
+            tail = tail->next;
+        }
+
+        // Step 4: Reverse result back to forward order
+        Node* result = reverseList(dummy->next);
+        delete dummy;
+
+        // No need to remove leading zeros here; sum of non-negative ints
+        // has no leading zeros except the single 0 case, which is correct.
+        return result;
+    }
+};
