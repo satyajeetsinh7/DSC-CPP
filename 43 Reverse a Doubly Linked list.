@@ -1,0 +1,28 @@
+class Solution {
+  public:
+    Node *reverse(Node *head) {
+
+        if (head == NULL || head->next == NULL)
+            return head;
+
+        Node* curr = head;
+        Node* temp = NULL;
+
+        while (curr != NULL) {
+            // Swap next and prev
+            temp = curr->prev;
+            curr->prev = curr->next;
+            curr->next = temp;
+
+            // Move to next node (which is prev now)
+            curr = curr->prev;
+        }
+
+        // After complete reversal, temp points to the node before NULL
+        // So new head is temp->prev
+        if (temp != NULL)
+            head = temp->prev;
+
+        return head;
+    }
+};
