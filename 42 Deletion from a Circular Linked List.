@@ -1,0 +1,48 @@
+class Solution {
+  public:
+    Node* deleteNode(Node* head, int key) {
+
+        if (head == NULL) return NULL;
+
+        Node* curr = head;
+        Node* prev = NULL;
+
+        // Case 1: head contains the key
+        if (head->data == key) {
+
+            // If only one node
+            if (head->next == head) {
+                delete head;
+                return NULL;
+            }
+
+            // Otherwise move to last node
+            Node* last = head;
+            while (last->next != head)
+                last = last->next;
+
+            // Skip the head
+            last->next = head->next;
+            Node* newHead = head->next;
+            delete head;
+            return newHead;
+        }
+
+        // Case 2: search the key in rest of list
+        curr = head->next;
+        prev = head;
+
+        while (curr != head) {
+            if (curr->data == key) {
+                prev->next = curr->next;
+                delete curr;
+                return head;     // head remains same
+            }
+            prev = curr;
+            curr = curr->next;
+        }
+
+        // Key not found → return original list
+        return head;
+    }
+};
