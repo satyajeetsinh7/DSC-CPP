@@ -1,0 +1,66 @@
+/*
+class Node {
+public:
+    int data;
+    Node* next;
+
+    Node(int x){
+        data = x;
+        next = NULL;
+    }
+};
+*/
+
+class Solution {
+  public:
+
+    // Merge two sorted linked lists
+    Node* sortedMerge(Node* a, Node* b) {
+        if (!a) return b;
+        if (!b) return a;
+
+        Node* result = NULL;
+
+        if (a->data <= b->data) {
+            result = a;
+            result->next = sortedMerge(a->next, b);
+        } else {
+            result = b;
+            result->next = sortedMerge(a, b->next);
+        }
+        return result;
+    }
+
+    // Find middle using slow/fast pointer
+    Node* getMiddle(Node* head) {
+        if (head == NULL)
+            return head;
+
+        Node* slow = head;
+        Node* fast = head->next;
+
+        while (fast && fast->next) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        return slow;  // middle node
+    }
+
+    // Merge sort function
+    Node* mergeSort(Node* head) {
+        if (head == NULL || head->next == NULL)
+            return head;
+
+        // Step 1: Find middle
+        Node* mid = getMiddle(head);
+        Node* nextHalf = mid->next;
+        mid->next = NULL;
+
+        // Step 2: Recursively sort both halves
+        Node* left = mergeSort(head);
+        Node* right = mergeSort(nextHalf);
+
+        // Step 3: Merge sorted halves
+        return sortedMerge(left, right);
+    }
+};
