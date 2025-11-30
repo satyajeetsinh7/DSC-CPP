@@ -1,0 +1,50 @@
+class Solution {
+public:
+    Node* reverseList(Node* head) {
+        Node* prev = NULL;
+        Node* curr = head;
+        Node* next = NULL;
+
+        while (curr != NULL) {
+            next = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+    }
+
+    Node* addOne(Node* head) {
+        // Step 1: Reverse the list
+        head = reverseList(head);
+        
+        Node* curr = head;
+        int carry = 1;
+
+        // Step 2: Add 1 and handle carry
+        while (curr != NULL) {
+            int sum = curr->data + carry;
+            curr->data = sum % 10;
+            carry = sum / 10;
+
+            // If no carry remains, break early
+            if (carry == 0) 
+                break;
+
+            // Move to next
+            if (curr->next == NULL)
+                break;
+
+            curr = curr->next;
+        }
+
+        // If after last node carry is still there
+        if (carry) {
+            curr->next = new Node(1);
+        }
+
+        // Step 3: Reverse again to restore original order
+        head = reverseList(head);
+        return head;
+    }
+};
